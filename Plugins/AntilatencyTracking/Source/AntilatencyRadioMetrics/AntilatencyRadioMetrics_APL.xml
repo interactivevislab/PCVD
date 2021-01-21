@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:android="http://schemas.android.com/apk/res/android">
+	<init>
+		<log text="AntilatencyRadioMetrics init"/>
+        <setBoolFromProperty result="bGradle" ini="Engine" section="/Script/AndroidRuntimeSettings.AndroidRuntimeSettings" property="bEnableGradle" default="false"/>
+        <if condition="bGradle">
+            <true>
+                <log text="AntilatencyRadioMetrics using gradle"/>
+            </true>
+            <false>
+                <log text="AntilatencyRadioMetrics using ant"/>
+            </false>
+        </if>
+	</init>
+
+    <proguardAdditions>
+        <insert>
+            -keep class com.antilatency.** {
+            *;
+            }
+        </insert>
+	</proguardAdditions>
+	
+	<androidManifestUpdates>
+        <!--<addPermission android:name="android.permission.INTERNET" />
+		<addPermission android:name="android.permission.ACCESS_NETWORK_STATE" />
+		<addPermission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+		<addPermission android:name="com.antilatency.contentprovider.PERMISSION"/>
+		<addFeature android:name="android.hardware.usb.host" />
+		<addFeature android:name="android.hardware.usb.UsbInterface" />-->
+	</androidManifestUpdates>
+
+	<buildGradleAdditions>
+		<insert>
+			dependencies {
+				compile('com.antilatency:antilatencyradiometrics:1.0.0')
+			}
+		</insert>
+	</buildGradleAdditions>
+
+    <resourceCopies>
+        <if condition="bGradle">
+            <false>
+                <setBoolIsEqual result="isArmeabi-v7a" arg1="$S(Architecture)" arg2="armeabi-v7a" />
+                <if condition="isArmeabi-v7a">
+                    <true>
+                        <copyFile src="$S(BuildDir)/JavaLibs/antilatencyradiometrics-1.0.0/jni/armeabi-v7a/libAntilatencyRadioMetrics.so"
+                        dst="$S(BuildDir)/libs/armeabi-v7a/libAntilatencyRadioMetrics.so" />
+                        <log text="Copying libAntilatencyRadioMetrics.so"/>
+                    </true>
+                    <false>
+                        <log text="\nERROR: Currently only Andorid armeabi-v7a and arm64-v8a archs are supported by AntilatencyRadioMetrics library!\n"/>
+                    </false>
+                </if>
+				
+				<setBoolIsEqual result="isArm64-v8a" arg1="$S(Architecture)" arg2="arm64-v8a" />
+                <if condition="isArm64-v8a">
+                    <true>
+                        <copyFile src="$S(BuildDir)/JavaLibs/antilatencyradiometrics-1.0.0/jni/arm64-v8a/libAntilatencyRadioMetrics.so"
+                        dst="$S(BuildDir)/libs/arm64-v8a/libAntilatencyRadioMetrics.so" />
+                        <log text="Copying libAntilatencyRadioMetrics.so"/>
+                    </true>
+                    <false>
+                        <log text="\nERROR: Currently only Andorid armeabi-v7a and arm64-v8a archs are supported by AntilatencyRadioMetrics library!\n"/>
+                    </false>
+                </if>
+            </false>
+        </if>
+    </resourceCopies>
+
+    <AARImports>
+        <insertValue value="repository $S(PluginDir)/../../ThirdParty/Antilatency/Bin/Android/"/>
+        <insertNewline/>
+        <insertValue value="com.antilatency,antilatencyradiometrics,1.0.0"/>
+        <insertNewline/>
+    </AARImports>
+  
+	<soLoadLibrary>
+		<log text="Loading AntilatencyRadioMetrics.so"/>
+		<loadLibrary name="AntilatencyRadioMetrics" failmsg="AntilatencyRadioMetrics library not loaded and required!" />
+		<log text="Loading AntilatencyRadioMetrics.so complete"/>
+	</soLoadLibrary>
+ </root>
+ 

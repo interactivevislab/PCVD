@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:android="http://schemas.android.com/apk/res/android">
+	<init>
+		<log text="AntilatencyHardwareExtensionInterface init"/>
+		<setBoolFromProperty result="bGradle" ini="Engine" section="/Script/AndroidRuntimeSettings.AndroidRuntimeSettings" property="bEnableGradle" default="false"/>
+        <if condition="bGradle">
+            <true>
+                <log text="AntilatencyHardwareExtensionInterface using gradle"/>
+            </true>
+            <false>
+                <log text="AntilatencyHardwareExtensionInterface using ant"/>
+            </false>
+        </if>
+	</init>
+	
+	<proguardAdditions>
+		<insert>
+			-keep class com.antilatency.** {
+            *;
+            }
+		</insert>
+	</proguardAdditions>
+	
+	<buildGradleAdditions>
+		<insert>
+			dependencies {
+				compile('com.antilatency:antilatencyhardwareextensioninterface:1.0.0')
+			}
+		</insert>
+	</buildGradleAdditions>
+ 
+    <!-- optional files or directories to copy to Intermediate/Android/APK -->
+	<resourceCopies>
+		<if condition="bGradle">
+            <false>
+				<setBoolIsEqual result="isArmeabi-v7a" arg1="$S(Architecture)" arg2="armeabi-v7a" />
+				<if condition="isArmeabi-v7a">
+					<true>
+						<copyFile src="$S(PluginDir)/../../ThirdParty/Antilatency/Bin/Android/armeabi-v7a/libAntilatencyHardwareExtensionInterface.so"
+							dst="$S(BuildDir)/libs/armeabi-v7a/libAntilatencyHardwareExtensionInterface.so" />
+						<log text="Copying libAntilatencyHardwareExtensionInterface.so"/>
+					</true>
+					<false>
+						<log text="\nERROR: Currently only Andorid armeabi-v7a and arm64-v8a archs are supported by Antilatency Hardware Extension Interface library!\n"/>
+					</false>
+				</if>
+				
+				<setBoolIsEqual result="isArm64-v8a" arg1="$S(Architecture)" arg2="arm64-v8a" />
+				<if condition="isArm64-v8a">
+					<true>
+						<copyFile src="$S(PluginDir)/../../ThirdParty/Antilatency/Bin/Android/isArm64-v8a/libAntilatencyHardwareExtensionInterface.so"
+							dst="$S(BuildDir)/libs/isArm64-v8a/libAntilatencyHardwareExtensionInterface.so" />
+						<log text="Copying libAntilatencyHardwareExtensionInterface.so"/>
+					</true>
+					<false>
+						<log text="\nERROR: Currently only Andorid armeabi-v7a and arm64-v8a archs are supported by Antilatency Hardware Extension Interface library!\n"/>
+					</false>
+				</if>
+			</false>
+        </if>
+	</resourceCopies>
+	
+	<AARImports>
+		<insertValue value="repository $S(PluginDir)/../../ThirdParty/Antilatency/Bin/Android/"/>
+		<insertNewline/>
+		<insertValue value="com.antilatency,antilatencyhardwareextensioninterface,1.0.0"/>
+		<insertNewline/>
+    </AARImports>
+	
+	<!-- optional libraries to load in GameActivity.java before libUE4.so-->
+	<soLoadLibrary>
+        <log text="Loading AntilatencyHardwareExtensionInterface.so"/>
+		<loadLibrary name="AntilatencyHardwareExtensionInterface" failmsg="AntilatencyHardwareExtensionInterface library not loaded and required!" />
+		<log text="Loading AntilatencyHardwareExtensionInterface.so complete"/>
+	</soLoadLibrary> 
+ </root>
+ 

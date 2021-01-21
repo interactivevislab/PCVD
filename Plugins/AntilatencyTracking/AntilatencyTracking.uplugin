@@ -1,0 +1,89 @@
+{
+  "FileVersion": 3,
+  "Version": 1,
+  "VersionName": "2.1.0",
+  "FriendlyName": "Antilatency Tracking Plugin",
+  "Description": "Provides support for the Antilatency tracking system",
+  "Category": "Tracking",
+  "CreatedBy": "ALT LLC",
+  "CreatedByURL": "http://antilatency.com",
+  "DocsURL": "",
+  "MarketplaceURL": "",
+  "SupportURL": "",
+  "EngineVersion": "4.25.0",
+  "CanContainContent": true,
+  "Installed": true,
+  "Modules": [
+    {
+      "Name": "AntilatencyDeviceNetwork",
+      "Type": "Runtime",
+      "LoadingPhase": "PostDefault",
+      "WhitelistPlatforms": [
+        "Win32",
+        "Win64",
+        "Android"
+      ]
+    },
+    {
+      "Name": "AntilatencyStorageClient",
+      "Type": "Runtime",
+      "LoadingPhase": "PostDefault",
+      "WhitelistPlatforms": [
+        "Win32",
+        "Win64",
+        "Android"
+      ]
+    },
+    {
+      "Name": "AntilatencyAltTracking",
+      "Type": "Runtime",
+      "LoadingPhase": "PostDefault",
+      "WhitelistPlatforms": [
+        "Win32",
+        "Win64",
+        "Android"
+      ]
+    },
+    {
+      "Name": "AntilatencyBracer",
+      "Type": "Runtime",
+      "LoadingPhase": "PostDefault",
+      "WhitelistPlatforms": [
+        "Win32",
+        "Win64",
+        "Android"
+      ]
+    },
+    {
+      "Name": "AntilatencyRadioMetrics",
+      "Type": "Runtime",
+      "LoadingPhase": "PostDefault",
+      "WhitelistPlatforms": [
+        "Win32",
+        "Win64",
+        "Android"
+      ]
+    },
+    {
+      "Name": "AntilatencyTrackingAlignment",
+      "Type": "Runtime",
+      "LoadingPhase": "PostDefault",
+      "WhitelistPlatforms": [
+        "Win32",
+        "Win64",
+        "Android"
+      ]
+    },
+    {
+      "Name": "AntilatencyHardwareExtensionInterface",
+      "Type": "Runtime",
+      "LoadingPhase": "PostDefault",
+      "WhitelistPlatforms": [
+        "Win32",
+        "Win64",
+        "Android"
+      ]
+    }
+  ],
+  "EnabledByDefault": false
+}

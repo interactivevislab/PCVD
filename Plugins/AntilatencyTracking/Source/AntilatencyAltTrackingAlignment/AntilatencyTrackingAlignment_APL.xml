@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:android="http://schemas.android.com/apk/res/android">
+	<init>
+		<log text="AntilatencyAltTrackingAlignment init"/>
+		<setBoolFromProperty result="bGradle" ini="Engine" section="/Script/AndroidRuntimeSettings.AndroidRuntimeSettings" property="bEnableGradle" default="false"/>
+        <if condition="bGradle">
+            <true>
+                <log text="AntilatencyTrackingAlignment using gradle"/>
+            </true>
+            <false>
+                <log text="AntilatencyTrackingAlignment using ant"/>
+            </false>
+        </if>
+	</init>
+	
+	<proguardAdditions>
+		<insert>
+			-keep class com.antilatency.** {
+            *;
+            }
+		</insert>
+	</proguardAdditions>
+	
+	<androidManifestUpdates>
+        <!--<addPermission android:name="android.permission.INTERNET" />
+		<addPermission android:name="android.permission.ACCESS_NETWORK_STATE" />
+		<addPermission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+		<addPermission android:name="com.antilatency.contentprovider.PERMISSION"/>
+		<addFeature android:name="android.hardware.usb.host" />
+		<addFeature android:name="android.hardware.usb.UsbInterface" />-->
+	</androidManifestUpdates>
+	
+	<buildGradleAdditions>
+		<insert>
+			dependencies {
+				compile('com.antilatency:antilatencytrackingalignment:1.0.0')
+			}
+		</insert>
+	</buildGradleAdditions>
+ 
+    <!-- optional files or directories to copy to Intermediate/Android/APK -->
+	<resourceCopies>
+		<if condition="bGradle">
+            <false>
+				<setBoolIsEqual result="isArmeabi-v7a" arg1="$S(Architecture)" arg2="armeabi-v7a" />
+				<if condition="isArmeabi-v7a">
+					<true>
+						<copyFile src="$S(PluginDir)/../../ThirdParty/Antilatency/Bin/Android/armeabi-v7a/libAntilatencyTrackingAlignment.so"
+							dst="$S(BuildDir)/libs/armeabi-v7a/libAntilatencyTrackingAlignment.so" />
+						<log text="Copying libAntilatencyTrackingAlignment.so"/>
+					</true>
+					<false>
+						<log text="\nERROR: Currently only Andorid armeabi-v7a and arm64-v8a archs are supported by Antilatency Tracking Alignment library!\n"/>
+					</false>
+				</if>
+				
+				<setBoolIsEqual result="isArm64-v8a" arg1="$S(Architecture)" arg2="arm64-v8a" />
+				<if condition="isArm64-v8a">
+					<true>
+						<copyFile src="$S(PluginDir)/../../ThirdParty/Antilatency/Bin/Android/isArm64-v8a/libAntilatencyTrackingAlignment.so"
+							dst="$S(BuildDir)/libs/isArm64-v8a/libAntilatencyTrackingAlignment.so" />
+						<log text="Copying libAntilatencyTrackingAlignment.so"/>
+					</true>
+					<false>
+						<log text="\nERROR: Currently only Andorid armeabi-v7a and arm64-v8a archs are supported by Antilatency Tracking Alignment library!\n"/>
+					</false>
+				</if>
+			</false>
+        </if>
+	</resourceCopies>
+	
+	<AARImports>
+		<insertValue value="repository $S(PluginDir)/../../ThirdParty/Antilatency/Bin/Android/"/>
+		<insertNewline/>
+		<insertValue value="com.antilatency,antilatencytrackingalignment,1.0.0"/>
+		<insertNewline/>
+    </AARImports>
+	
+	<!-- optional libraries to load in GameActivity.java before libUE4.so-->
+	<soLoadLibrary>
+        <log text="Loading AntilatencyTrackingAlignment.so"/>
+		<loadLibrary name="AntilatencyTrackingAlignment" failmsg="Tracking Alignment library not loaded and required!" />
+		<log text="Loading AntilatencyTrackingAlignment.so complete"/>
+	</soLoadLibrary> 
+ </root>
+ 
